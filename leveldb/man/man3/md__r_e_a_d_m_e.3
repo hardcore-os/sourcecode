@@ -1,0 +1,205 @@
+.TH "md__r_e_a_d_m_e" 3 "Sun Jul 25 2021" "My Project" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md__r_e_a_d_m_e \- README 
+\fBLevelDB is a fast key-value storage library written at Google that provides an ordered mapping from string keys to string values\&.\fP
+.PP
+\fC\fP \fC\fP
+.PP
+Authors: Sanjay Ghemawat (sanjay@google.com) and Jeff Dean (jeff@google.com)
+.SH "Features"
+.PP
+.IP "\(bu" 2
+Keys and values are arbitrary byte arrays\&.
+.IP "\(bu" 2
+Data is stored sorted by key\&.
+.IP "\(bu" 2
+Callers can provide a custom comparison function to override the sort order\&.
+.IP "\(bu" 2
+The basic operations are \fCPut(key,value)\fP, \fCGet(key)\fP, \fCDelete(key)\fP\&.
+.IP "\(bu" 2
+Multiple changes can be made in one atomic batch\&.
+.IP "\(bu" 2
+Users can create a transient snapshot to get a consistent view of data\&.
+.IP "\(bu" 2
+Forward and backward iteration is supported over the data\&.
+.IP "\(bu" 2
+Data is automatically compressed using the \fCSnappy compression library\fP\&.
+.IP "\(bu" 2
+External activity (file system operations etc\&.) is relayed through a virtual interface so users can customize the operating system interactions\&.
+.PP
+.SH "Documentation"
+.PP
+\fCLevelDB library documentation\fP is online and bundled with the source code\&.
+.SH "Limitations"
+.PP
+.IP "\(bu" 2
+This is not a SQL database\&. It does not have a relational data model, it does not support SQL queries, and it has no support for indexes\&.
+.IP "\(bu" 2
+Only a single process (possibly multi-threaded) can access a particular database at a time\&.
+.IP "\(bu" 2
+There is no client-server support builtin to the library\&. An application that needs such support will have to wrap their own server around the library\&.
+.PP
+.SH "Getting the Source"
+.PP
+.PP
+.nf
+git clone --recurse-submodules https://github\&.com/google/leveldb\&.git
+.fi
+.PP
+.SH "Building"
+.PP
+This project supports \fCCMake\fP out of the box\&.
+.SS "Build for POSIX"
+Quick start:
+.PP
+.PP
+.nf
+mkdir -p build && cd build
+cmake -DCMAKE_BUILD_TYPE=Release \&.\&. && cmake --build \&.
+.fi
+.PP
+.SS "Building for Windows"
+First generate the Visual Studio 2017 project/solution files:
+.PP
+.PP
+.nf
+mkdir build
+cd build
+cmake -G "Visual Studio 15" \&.\&.
+.fi
+.PP
+ The default default will build for x86\&. For 64-bit run:
+.PP
+.PP
+.nf
+cmake -G "Visual Studio 15 Win64" \&.\&.
+.fi
+.PP
+.PP
+To compile the Windows solution from the command-line:
+.PP
+.PP
+.nf
+devenv /build Debug leveldb\&.sln
+.fi
+.PP
+.PP
+or open leveldb\&.sln in Visual Studio and build from within\&.
+.PP
+Please see the CMake documentation and \fCCMakeLists\&.txt\fP for more advanced usage\&.
+.SH "Contributing to the leveldb Project"
+.PP
+The leveldb project welcomes contributions\&. leveldb's primary goal is to be a reliable and fast key/value store\&. Changes that are in line with the features/limitations outlined above, and meet the requirements below, will be considered\&.
+.PP
+Contribution requirements:
+.PP
+.IP "1." 4
+\fBTested platforms only\fP\&. We \fIgenerally\fP will only accept changes for platforms that are compiled and tested\&. This means POSIX (for Linux and macOS) or Windows\&. Very small changes will sometimes be accepted, but consider that more of an exception than the rule\&.
+.IP "2." 4
+\fBStable API\fP\&. We strive very hard to maintain a stable API\&. Changes that require changes for projects using leveldb \fImight\fP be rejected without sufficient benefit to the project\&.
+.IP "3." 4
+\fBTests\fP: All changes must be accompanied by a new (or changed) test, or a sufficient explanation as to why a new (or changed) test is not required\&.
+.IP "4." 4
+\fBConsistent Style\fP: This project conforms to the \fCGoogle C++ Style Guide\fP\&. To ensure your changes are properly formatted please run:
+.PP
+.PP
+.PP
+.nf
+clang-format -i --style=file <file>
+.fi
+.PP
+.SS "Submitting a Pull Request"
+Before any pull request will be accepted the author must first sign a Contributor License Agreement (CLA) at https://cla.developers.google.com/\&.
+.PP
+In order to keep the commit timeline linear \fCsquash\fP your changes down to a single commit and \fCrebase\fP on google/leveldb/master\&. This keeps the commit timeline linear and more easily sync'ed with the internal repository at Google\&. More information at GitHub's \fCAbout Git rebase\fP page\&.
+.SH "Performance"
+.PP
+Here is a performance report (with explanations) from the run of the included db_bench program\&. The results are somewhat noisy, but should be enough to get a ballpark performance estimate\&.
+.SS "Setup"
+We use a database with a million entries\&. Each entry has a 16 byte key, and a 100 byte value\&. Values used by the benchmark compress to about half their original size\&. 
+.PP
+.nf
+LevelDB:    version 1.1
+Date:       Sun May  1 12:11:26 2011
+CPU:        4 x Intel(R) Core(TM)2 Quad CPU    Q6600  @ 2.40GHz
+CPUCache:   4096 KB
+Keys:       16 bytes each
+Values:     100 bytes each (50 bytes after compression)
+Entries:    1000000
+Raw Size:   110.6 MB (estimated)
+File Size:  62.9 MB (estimated)
+
+.fi
+.PP
+ 
+.SS "Write performance"
+The 'fill' benchmarks create a brand new database, in either sequential, or random order\&. The 'fillsync' benchmark flushes data from the operating system to the disk after every operation; the other write operations leave the data sitting in the operating system buffer cache for a while\&. The 'overwrite' benchmark does random writes that update existing keys in the database\&. 
+.PP
+.nf
+fillseq      :       1.765 micros/op;   62.7 MB/s
+fillsync     :     268.409 micros/op;    0.4 MB/s (10000 ops)
+fillrandom   :       2.460 micros/op;   45.0 MB/s
+overwrite    :       2.380 micros/op;   46.5 MB/s
+
+.fi
+.PP
+ Each 'op' above corresponds to a write of a single key/value pair\&. I\&.e\&., a random write benchmark goes at approximately 400,000 writes per second\&.
+.PP
+Each 'fillsync' operation costs much less (0\&.3 millisecond) than a disk seek (typically 10 milliseconds)\&. We suspect that this is because the hard disk itself is buffering the update in its memory and responding before the data has been written to the platter\&. This may or may not be safe based on whether or not the hard disk has enough power to save its memory in the event of a power failure\&.
+.SS "Read performance"
+We list the performance of reading sequentially in both the forward and reverse direction, and also the performance of a random lookup\&. Note that the database created by the benchmark is quite small\&. Therefore the report characterizes the performance of leveldb when the working set fits in memory\&. The cost of reading a piece of data that is not present in the operating system buffer cache will be dominated by the one or two disk seeks needed to fetch the data from disk\&. Write performance will be mostly unaffected by whether or not the working set fits in memory\&. 
+.PP
+.nf
+readrandom  : 16.677 micros/op;  (approximately 60,000 reads per second)
+readseq     :  0.476 micros/op;  232.3 MB/s
+readreverse :  0.724 micros/op;  152.9 MB/s
+
+.fi
+.PP
+ LevelDB compacts its underlying storage data in the background to improve read performance\&. The results listed above were done immediately after a lot of random writes\&. The results after compactions (which are usually triggered automatically) are better\&. 
+.PP
+.nf
+readrandom  : 11.602 micros/op;  (approximately 85,000 reads per second)
+readseq     :  0.423 micros/op;  261.8 MB/s
+readreverse :  0.663 micros/op;  166.9 MB/s
+
+.fi
+.PP
+ Some of the high cost of reads comes from repeated decompression of blocks read from disk\&. If we supply enough cache to the leveldb so it can hold the uncompressed blocks in memory, the read performance improves again: 
+.PP
+.nf
+readrandom  : 9.775 micros/op;  (approximately 100,000 reads per second before compaction)
+readrandom  : 5.215 micros/op;  (approximately 190,000 reads per second after compaction)
+
+.fi
+.PP
+ 
+.SS "Repository contents"
+See \fBdoc/index\&.md\fP for more explanation\&. See \fBdoc/impl\&.md\fP for a brief overview of the implementation\&.
+.PP
+The public interface is in include/leveldb/*\&.h\&. Callers should not include or rely on the details of any other header files in this package\&. Those internal APIs may be changed without warning\&.
+.PP
+Guide to header files:
+.PP
+.IP "\(bu" 2
+\fBinclude/leveldb/db\&.h\fP: Main interface to the DB: Start here\&.
+.IP "\(bu" 2
+\fBinclude/leveldb/options\&.h\fP: Control over the behavior of an entire database, and also control over the behavior of individual reads and writes\&.
+.IP "\(bu" 2
+\fBinclude/leveldb/comparator\&.h\fP: Abstraction for user-specified comparison function\&. If you want just bytewise comparison of keys, you can use the default comparator, but clients can write their own comparator implementations if they want custom ordering (e\&.g\&. to handle different character encodings, etc\&.)\&.
+.IP "\(bu" 2
+\fBinclude/leveldb/iterator\&.h\fP: Interface for iterating over data\&. You can get an iterator from a DB object\&.
+.IP "\(bu" 2
+\fBinclude/leveldb/write_batch\&.h\fP: Interface for atomically applying multiple updates to a database\&.
+.IP "\(bu" 2
+\fBinclude/leveldb/slice\&.h\fP: A simple module for maintaining a pointer and a length into some other byte array\&.
+.IP "\(bu" 2
+\fBinclude/leveldb/status\&.h\fP: Status is returned from many of the public interfaces and is used to report success and various kinds of errors\&.
+.IP "\(bu" 2
+\fBinclude/leveldb/env\&.h\fP: Abstraction of the OS environment\&. A posix implementation of this interface is in util/env_posix\&.cc\&.
+.IP "\(bu" 2
+\fBinclude/leveldb/table\&.h, include/leveldb/table_builder\&.h\fP: Lower-level modules that most clients probably won't use directly\&. 
+.PP
+

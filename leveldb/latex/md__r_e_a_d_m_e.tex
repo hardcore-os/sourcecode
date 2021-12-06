@@ -1,0 +1,141 @@
+{\bfseries{Level\+DB is a fast key-\/value storage library written at Google that provides an ordered mapping from string keys to string values.}}
+
+\href{https://travis-ci.org/google/leveldb}{\texttt{ }} \href{https://ci.appveyor.com/project/pwnall/leveldb}{\texttt{ }}
+
+Authors\+: Sanjay Ghemawat (\href{mailto:sanjay@google.com}{\texttt{ sanjay@google.\+com}}) and Jeff Dean (\href{mailto:jeff@google.com}{\texttt{ jeff@google.\+com}})\hypertarget{md__r_e_a_d_m_e_autotoc_md4}{}\doxysection{Features}\label{md__r_e_a_d_m_e_autotoc_md4}
+
+\begin{DoxyItemize}
+\item Keys and values are arbitrary byte arrays.
+\item Data is stored sorted by key.
+\item Callers can provide a custom comparison function to override the sort order.
+\item The basic operations are {\ttfamily Put(key,value)}, {\ttfamily Get(key)}, {\ttfamily Delete(key)}.
+\item Multiple changes can be made in one atomic batch.
+\item Users can create a transient snapshot to get a consistent view of data.
+\item Forward and backward iteration is supported over the data.
+\item Data is automatically compressed using the \href{http://google.github.io/snappy/}{\texttt{ Snappy compression library}}.
+\item External activity (file system operations etc.) is relayed through a virtual interface so users can customize the operating system interactions.
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md5}{}\doxysection{Documentation}\label{md__r_e_a_d_m_e_autotoc_md5}
+\href{https://github.com/google/leveldb/blob/master/doc/index.md}{\texttt{ Level\+DB library documentation}} is online and bundled with the source code.\hypertarget{md__r_e_a_d_m_e_autotoc_md6}{}\doxysection{Limitations}\label{md__r_e_a_d_m_e_autotoc_md6}
+
+\begin{DoxyItemize}
+\item This is not a SQL database. It does not have a relational data model, it does not support SQL queries, and it has no support for indexes.
+\item Only a single process (possibly multi-\/threaded) can access a particular database at a time.
+\item There is no client-\/server support builtin to the library. An application that needs such support will have to wrap their own server around the library.
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md7}{}\doxysection{Getting the Source}\label{md__r_e_a_d_m_e_autotoc_md7}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git clone -\/-\/recurse-\/submodules https://github.com/google/leveldb.git}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md8}{}\doxysection{Building}\label{md__r_e_a_d_m_e_autotoc_md8}
+This project supports \href{https://cmake.org/}{\texttt{ CMake}} out of the box.\hypertarget{md__r_e_a_d_m_e_autotoc_md9}{}\doxysubsubsection{Build for POSIX}\label{md__r_e_a_d_m_e_autotoc_md9}
+Quick start\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{mkdir -\/p build \&\& cd build}
+\DoxyCodeLine{cmake -\/DCMAKE\_BUILD\_TYPE=Release .. \&\& cmake -\/-\/build .}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md10}{}\doxysubsubsection{Building for Windows}\label{md__r_e_a_d_m_e_autotoc_md10}
+First generate the Visual Studio 2017 project/solution files\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{mkdir build}
+\DoxyCodeLine{cd build}
+\DoxyCodeLine{cmake -\/G "{}Visual Studio 15"{} ..}
+
+\end{DoxyCode}
+ The default default will build for x86. For 64-\/bit run\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake -\/G "{}Visual Studio 15 Win64"{} ..}
+
+\end{DoxyCode}
+
+
+To compile the Windows solution from the command-\/line\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{devenv /build Debug leveldb.sln}
+
+\end{DoxyCode}
+
+
+or open leveldb.\+sln in Visual Studio and build from within.
+
+Please see the CMake documentation and {\ttfamily CMake\+Lists.\+txt} for more advanced usage.\hypertarget{md__r_e_a_d_m_e_autotoc_md11}{}\doxysection{Contributing to the leveldb Project}\label{md__r_e_a_d_m_e_autotoc_md11}
+The leveldb project welcomes contributions. leveldb\textquotesingle{}s primary goal is to be a reliable and fast key/value store. Changes that are in line with the features/limitations outlined above, and meet the requirements below, will be considered.
+
+Contribution requirements\+:
+
+
+\begin{DoxyEnumerate}
+\item {\bfseries{Tested platforms only}}. We {\itshape generally} will only accept changes for platforms that are compiled and tested. This means POSIX (for Linux and mac\+OS) or Windows. Very small changes will sometimes be accepted, but consider that more of an exception than the rule.
+\item {\bfseries{Stable API}}. We strive very hard to maintain a stable API. Changes that require changes for projects using leveldb {\itshape might} be rejected without sufficient benefit to the project.
+\item {\bfseries{Tests}}\+: All changes must be accompanied by a new (or changed) test, or a sufficient explanation as to why a new (or changed) test is not required.
+\item {\bfseries{Consistent Style}}\+: This project conforms to the \href{https://google.github.io/styleguide/cppguide.html}{\texttt{ Google C++ Style Guide}}. To ensure your changes are properly formatted please run\+:
+\end{DoxyEnumerate}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{clang-\/format -\/i -\/-\/style=file <file>}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md12}{}\doxysubsection{Submitting a Pull Request}\label{md__r_e_a_d_m_e_autotoc_md12}
+Before any pull request will be accepted the author must first sign a Contributor License Agreement (CLA) at \href{https://cla.developers.google.com/}{\texttt{ https\+://cla.\+developers.\+google.\+com/}}.
+
+In order to keep the commit timeline linear \href{https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History\#Squashing-Commits}{\texttt{ squash}} your changes down to a single commit and \href{https://git-scm.com/docs/git-rebase}{\texttt{ rebase}} on google/leveldb/master. This keeps the commit timeline linear and more easily sync\textquotesingle{}ed with the internal repository at Google. More information at Git\+Hub\textquotesingle{}s \href{https://help.github.com/articles/about-git-rebase/}{\texttt{ About Git rebase}} page.\hypertarget{md__r_e_a_d_m_e_autotoc_md13}{}\doxysection{Performance}\label{md__r_e_a_d_m_e_autotoc_md13}
+Here is a performance report (with explanations) from the run of the included db\+\_\+bench program. The results are somewhat noisy, but should be enough to get a ballpark performance estimate.\hypertarget{md__r_e_a_d_m_e_autotoc_md14}{}\doxysubsection{Setup}\label{md__r_e_a_d_m_e_autotoc_md14}
+We use a database with a million entries. Each entry has a 16 byte key, and a 100 byte value. Values used by the benchmark compress to about half their original size. \begin{DoxyVerb}LevelDB:    version 1.1
+Date:       Sun May  1 12:11:26 2011
+CPU:        4 x Intel(R) Core(TM)2 Quad CPU    Q6600  @ 2.40GHz
+CPUCache:   4096 KB
+Keys:       16 bytes each
+Values:     100 bytes each (50 bytes after compression)
+Entries:    1000000
+Raw Size:   110.6 MB (estimated)
+File Size:  62.9 MB (estimated)
+\end{DoxyVerb}
+ \hypertarget{md__r_e_a_d_m_e_autotoc_md15}{}\doxysubsection{Write performance}\label{md__r_e_a_d_m_e_autotoc_md15}
+The \char`\"{}fill\char`\"{} benchmarks create a brand new database, in either sequential, or random order. The \char`\"{}fillsync\char`\"{} benchmark flushes data from the operating system to the disk after every operation; the other write operations leave the data sitting in the operating system buffer cache for a while. The \char`\"{}overwrite\char`\"{} benchmark does random writes that update existing keys in the database. \begin{DoxyVerb}fillseq      :       1.765 micros/op;   62.7 MB/s
+fillsync     :     268.409 micros/op;    0.4 MB/s (10000 ops)
+fillrandom   :       2.460 micros/op;   45.0 MB/s
+overwrite    :       2.380 micros/op;   46.5 MB/s
+\end{DoxyVerb}
+ Each \char`\"{}op\char`\"{} above corresponds to a write of a single key/value pair. I.\+e., a random write benchmark goes at approximately 400,000 writes per second.
+
+Each \char`\"{}fillsync\char`\"{} operation costs much less (0.\+3 millisecond) than a disk seek (typically 10 milliseconds). We suspect that this is because the hard disk itself is buffering the update in its memory and responding before the data has been written to the platter. This may or may not be safe based on whether or not the hard disk has enough power to save its memory in the event of a power failure.\hypertarget{md__r_e_a_d_m_e_autotoc_md16}{}\doxysubsection{Read performance}\label{md__r_e_a_d_m_e_autotoc_md16}
+We list the performance of reading sequentially in both the forward and reverse direction, and also the performance of a random lookup. Note that the database created by the benchmark is quite small. Therefore the report characterizes the performance of leveldb when the working set fits in memory. The cost of reading a piece of data that is not present in the operating system buffer cache will be dominated by the one or two disk seeks needed to fetch the data from disk. Write performance will be mostly unaffected by whether or not the working set fits in memory. \begin{DoxyVerb}readrandom  : 16.677 micros/op;  (approximately 60,000 reads per second)
+readseq     :  0.476 micros/op;  232.3 MB/s
+readreverse :  0.724 micros/op;  152.9 MB/s
+\end{DoxyVerb}
+ Level\+DB compacts its underlying storage data in the background to improve read performance. The results listed above were done immediately after a lot of random writes. The results after compactions (which are usually triggered automatically) are better. \begin{DoxyVerb}readrandom  : 11.602 micros/op;  (approximately 85,000 reads per second)
+readseq     :  0.423 micros/op;  261.8 MB/s
+readreverse :  0.663 micros/op;  166.9 MB/s
+\end{DoxyVerb}
+ Some of the high cost of reads comes from repeated decompression of blocks read from disk. If we supply enough cache to the leveldb so it can hold the uncompressed blocks in memory, the read performance improves again\+: \begin{DoxyVerb}readrandom  : 9.775 micros/op;  (approximately 100,000 reads per second before compaction)
+readrandom  : 5.215 micros/op;  (approximately 190,000 reads per second after compaction)
+\end{DoxyVerb}
+ \hypertarget{md__r_e_a_d_m_e_autotoc_md17}{}\doxysubsection{Repository contents}\label{md__r_e_a_d_m_e_autotoc_md17}
+See doc/index.md for more explanation. See doc/impl.md for a brief overview of the implementation.
+
+The public interface is in include/leveldb/$\ast$.h. Callers should not include or rely on the details of any other header files in this package. Those internal APIs may be changed without warning.
+
+Guide to header files\+:
+
+
+\begin{DoxyItemize}
+\item {\bfseries{include/leveldb/db.\+h}}\+: Main interface to the DB\+: Start here.
+\item {\bfseries{include/leveldb/options.\+h}}\+: Control over the behavior of an entire database, and also control over the behavior of individual reads and writes.
+\item {\bfseries{include/leveldb/comparator.\+h}}\+: Abstraction for user-\/specified comparison function. If you want just bytewise comparison of keys, you can use the default comparator, but clients can write their own comparator implementations if they want custom ordering (e.\+g. to handle different character encodings, etc.).
+\item {\bfseries{include/leveldb/iterator.\+h}}\+: Interface for iterating over data. You can get an iterator from a DB object.
+\item {\bfseries{include/leveldb/write\+\_\+batch.\+h}}\+: Interface for atomically applying multiple updates to a database.
+\item {\bfseries{include/leveldb/slice.\+h}}\+: A simple module for maintaining a pointer and a length into some other byte array.
+\item {\bfseries{include/leveldb/status.\+h}}\+: Status is returned from many of the public interfaces and is used to report success and various kinds of errors.
+\item {\bfseries{include/leveldb/env.\+h}}\+: Abstraction of the OS environment. A posix implementation of this interface is in util/env\+\_\+posix.\+cc.
+\item {\bfseries{include/leveldb/table.\+h, include/leveldb/table\+\_\+builder.\+h}}\+: Lower-\/level modules that most clients probably won\textquotesingle{}t use directly. 
+\end{DoxyItemize}
